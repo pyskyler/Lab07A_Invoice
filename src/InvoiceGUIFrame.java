@@ -113,14 +113,17 @@ public class InvoiceGUIFrame extends JFrame {
 
     private void addItem() {
         String name = itemNameTextField.getText();
-        double price = Double.parseDouble(itemPriceTextField.getText());
-        if (itemQuantityTextField.getText().isEmpty()) {
-            invoice.addItem(name, price);
+        String price = itemPriceTextField.getText();
+        String quantity = itemQuantityTextField.getText();
+
+        String validation = invoice.validate(price, quantity);
+
+        if (!validation.equals(InvoiceModel.VALID_DATA)) {
+            JOptionPane.showMessageDialog(null, validation);
             return;
         }
-        int quantity = Integer.parseInt(itemQuantityTextField.getText());
 
-        invoice.addItem(name, price, quantity);
+        invoice.addItem(name, Double.parseDouble(price), Integer.parseInt(quantity));
 
         itemNameTextField.setText("");
         itemPriceTextField.setText("");

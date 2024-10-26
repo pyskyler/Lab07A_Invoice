@@ -5,6 +5,7 @@ public class InvoiceModel {
     ArrayList<InvoiceItem> invoiceItems = new ArrayList<InvoiceItem>();
     String invoiceTitle;
     String invoiceAddress;
+    public static final String VALID_DATA = "valid";
 
 
     public InvoiceModel() {
@@ -39,12 +40,20 @@ public class InvoiceModel {
 
         double total = 0;
 
+        ArrayList<String> addressLines = new ArrayList<String>();
+        for (String line : invoiceAddress.split("\n")) {
+            addressLines.add(line);
+        }
+
         StringBuilder invoice = new StringBuilder();
         invoice.append(INVOICE_LINE);
         invoice.append("|" + centerString(INVOICE_WIDTH, invoiceTitle) + "|\n");
         invoice.append(INVOICE_SPACE);
-        invoice.append(String.format("| %-51s |\n", invoiceAddress));
+        for (String line : addressLines) {
+            invoice.append(String.format("| %-51s |\n", line));
+        }
         invoice.append(INVOICE_SPACE);
+        invoice.append(INVOICE_LINE);
         invoice.append(String.format("| %-21s | %-3s | %-9s | %-9s |\n", "Name", "Qty", "Price", "Total"));
         invoice.append("|-----------------------|-----|-----------|-----------|\n");
         for (InvoiceItem item : invoiceItems) {
@@ -64,6 +73,27 @@ public class InvoiceModel {
 
     }
 
+    public String validate(String price, String quantity) {
+        try {
+            double priceValue = Double.parseDouble(price);
+            if (priceValue < 0) {
+                return "Price must be a positive number";
+            }
+        } catch (NumberFormatException e) {
+            return "Price must be a number";
+        }
+
+        try {
+            int quantityValue = Integer.parseInt(quantity);
+            if (quantityValue < 0) {
+                return "Quantity must be a positive number";
+            }
+        } catch (NumberFormatException e) {
+            return "Quantity must be a number";
+        }
+        return VALID_DATA;
+    }
+
     private static String centerString (int width, String s) {
         return String.format("%-" + width  + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
     }
@@ -75,4 +105,6 @@ public class InvoiceModel {
     public void addAddress(String address) {
         invoiceAddress = address;
     }
+
+
 }
