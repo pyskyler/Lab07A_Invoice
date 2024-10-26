@@ -13,7 +13,7 @@ public class InvoiceModel {
 
     public void addItem(String name, double price) {
         for (InvoiceItem item : invoiceItems) {
-            if (item.getName().equals(name) || item.getPrice() == price) {
+            if (item.getName().equals(name) && item.getPrice() == price) {
                 item.addQuantity(1);
                 return;
             }
@@ -54,7 +54,7 @@ public class InvoiceModel {
         }
         invoice.append(INVOICE_SPACE);
         invoice.append(INVOICE_LINE);
-        invoice.append(String.format("| %-21s | %-3s | %-9s | %-9s |\n", "Name", "Qty", "Price", "Total"));
+        invoice.append(String.format("| %-21s | %-3s | %-9s | %-9s |\n", "Item", "Qty", "Price", "Total"));
         invoice.append("|-----------------------|-----|-----------|-----------|\n");
         for (InvoiceItem item : invoiceItems) {
             String name = item.getName();
